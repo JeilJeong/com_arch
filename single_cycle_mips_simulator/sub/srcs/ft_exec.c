@@ -1,22 +1,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ft_type.h"
 
-unsigned int ft_curr_inst(unsigned int *buf, unsigned int pc)
+unsigned int ft_curr_inst(unsigned int *inst_mem, unsigned int pc)
 {
 	unsigned int	index;
 
 	index = pc / 4;
-	return (buf[index]);
+	printf("\ncurrent inst: %X\n", inst_mem[index]);
+	return (inst_mem[index]);
 }
 
-unsigned int	*ft_read(char *argv)
+void	*ft_read(char *argv, unsigned int *inst_mem)
 {
-	unsigned int	*buf;
 	FILE		*fd;
 	int		size;
 	int		count;
-
+	unsigned int	first_mask = 0xFF000000;
+	unsigned int	second_mask = 0x00FF0000;
+	unsigned int	third_mask = 0x0000FF00;
+	unsigned int	fourth_mask = 0x000000FF;
+	unsigned int	tmp_fourth;
+	unsigned int	tmp_third;
+	unsigned int	tmp_second;
+	unsigned int	tmp_first;
+	
 	if ((fd = fopen(argv, "rb")) == NULL)
 	{
 		fputs("ft_exec.c: File open error in ft_read\n", stderr);
@@ -24,74 +33,64 @@ unsigned int	*ft_read(char *argv)
 	}
 	fseek(fd, 0, SEEK_END);
 	size = ftell(fd);
-	if ((buf = malloc(size)) == NULL)
-	{
-		fputs("ft_exec.c: Failed to allocate buf in ft_read\n", stderr);
-		exit(1);
-	}
-	memset(buf, 0, size);
 	fseek(fd, 0, SEEK_SET);
-	if ((count = fread(buf, size, 1, fd)) <= 0)
+	if ((count = fread(inst_mem, size, 1, fd)) <= 0)
 	{
 		fputs("ft_exec.c: Failed to read file int ft_read\n", stderr);
 		exit(1);
 	}
+	for (int i = 0; i < size; i++)
+	{
+		tmp_fourth = (inst_mem[i] & first_mask) >> 24;
+		tmp_third = (inst_mem[i] & second_mask) >> 8;
+		tmp_second = (inst_mem[i] & third_mask) << 8;
+		tmp_first = (inst_mem[i] & fourth_mask) << 24;
+		inst_mem[i] = tmp_first | tmp_second | tmp_third | tmp_fourth;
+	}
 	fclose(fd);
-	return (buf);
 }
 
-void	ft_inst_exec(unsigned int inst, unsigned int *reg, unsigned int *inst_mem, unsigned int *data_mem)
+void	ft_inst_exec(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 {
-	//printf("%#.32X\n", inst);
-	//type classification
-	/*
 	int	type;
 
 	type = ft_istype(inst);
 	if (type == 2)
 	{
-		puts("R-type");
-		ft_rtype(inst, reg, inst_mem, data_mem);
+		puts("R-type\n");
+		ft_rtype(inst, reg, data_mem);
 	}
 	else if (type == 1)
 	{
-		puts("I-type");
-		ft_itype(inst, reg, inst_mem, data_mem);
+		puts("I-type\n");
+		ft_itype(inst, reg, data_mem);
 	}
 	else if (type == 0)
 	{
-		puts("J-type");
-		ft_jtype(inst, reg, inst_mem, data_mem);
+		puts("J-type\n");
+		ft_jtype(inst, reg, data_mem);
 	}
 	else
-		puts("nop");
-		;
-	*/
+	{
+		puts("ft_nop\n");
+		ft_nop();
+	}
 }
 
 void	ft_exec(int argc, char **argv, unsigned int *reg, unsigned int *inst_mem, unsigned int *data_mem)
 {
-	/*
-	while문으로 N보다 작을 때까지 실행
-	{
-		instruction read function to 4byte 공간 - argument로 pc 값 넘겨줌
-		instruction 분해 function - Itype, Rtype, Jtype으로 분류
-		type별 instruction function 제시 - argument로 reg, mem을 받음, 실행 후 pc 계산
-		instruction 한 개씩 실행
-	}
-	*/
-	unsigned int	*buf;
 	unsigned int	inst;
-	int		N;
+	int		n;
 	int		i;
 
-	N = atoi(argv[2]);
+	n = atoi(argv[2]);
 	i = 0;
-	while (i < N)
+	while (i < n)
 	{
-		buf = ft_read(argv[1]);
-		inst = ft_curr_inst(buf, reg[32]);
-		ft_inst_exec(inst, reg, inst_mem, data_mem);
+		ft_read(argv[1], inst_mem);
+		printf("\npc ==> 10: %d, 16 %X\n", reg[32], reg[32]);
+		inst = ft_curr_inst(inst_mem, reg[32]);
+		ft_inst_exec(inst, reg, data_mem);
 		i++;
 	}
 }
