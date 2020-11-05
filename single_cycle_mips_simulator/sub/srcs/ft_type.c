@@ -46,6 +46,9 @@ void	ft_rtype(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 	funct = inst & funct_mask;
 	switch (funct)
 	{
+		case 0x00:
+			ft_pc_normal(reg);
+			break;
 		case 0x20://add
 			reg[rd] = reg[rs] + reg[rt];
 			ft_pc_normal(reg);
@@ -81,12 +84,13 @@ void	ft_itype(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 
 	opcode = inst & opcode_mask;
 	rs = (inst & rs_mask) >> 21;
-	rt = inst & rt_mask >> 16;
+	rt = (inst & rt_mask) >> 16;
 	imm = (int)(inst & imm_mask);
 	switch (opcode)
 	{
 		case 0x20000000://addi
 			reg[rt] = reg[rs] + imm;
+			printf("=====> reg[%d] : %x", rt, reg[rt]);
 			ft_pc_normal(reg);
 			break;
 		case 0x30000000://andi
@@ -106,24 +110,50 @@ void	ft_itype(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 			ft_pc_normal(reg);
 			break;
 		case 0x8C000000://lw
-			reg[rt] = data_mem[reg[rs] + imm];
+			write(1, "??\n", 3);
+			reg[rt] = data_mem[(reg[rs] + imm - 0x10000000)/4];
+			write(1, "??\n", 3);
 			ft_pc_normal(reg);
+			write(1, "??\n", 3);
 			break;
 		case 0xAC000000://sw
-			data_mem[reg[rs] + imm] = reg[rt];
+			write(1, "!!\n", 3);
+			data_mem[(reg[rs] + imm - 0x10000000)/4] = reg[rt];
+			write(1, "!!\n", 3);
 			ft_pc_normal(reg);
+			write(1, "!!\n", 3);
 			break;
 		case 0x10000000://beq
 			if (reg[rs] == reg[rt])
+			{
+				printf("%X : %X\n", reg[rs], reg[rt]);
+				write(1, "beq: branch in\n", 15);
 				ft_pc_branch(reg, imm);
+				write(1, "beq: branch out\n", 16);
+			}
 			else
+			{
+				printf("%X : %X\n", reg[rs], reg[rt]);
+				write(1, "beq: else in\n", 13);
 				ft_pc_normal(reg);
+				write(1, "beq: else out\n", 14);
+			}
 			break;
 		case 0x14000000://bne
 			if (reg[rs] != reg[rt])
+			{
+				printf("%X : %X\n", reg[rs], reg[rt]);
+				write(1, "bne: branch in\n", 15);
 				ft_pc_branch(reg, imm);
+				write(1, "bne: branch out\n", 16);
+			}
 			else
+			{
+				printf("%X : %X\n", reg[rs], reg[rt]);
+				write(1, "bne: else in\n", 13);
 				ft_pc_normal(reg);
+				write(1, "bne: else out\n", 14);
+			}
 			break;
 		default:
 			ft_nop();

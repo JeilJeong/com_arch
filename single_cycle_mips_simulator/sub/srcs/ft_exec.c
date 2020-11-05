@@ -88,7 +88,7 @@ void	ft_exec(int argc, char **argv, unsigned int *reg, unsigned int *inst_mem, u
 	while (i < n)
 	{
 		ft_read(argv[1], inst_mem);
-		printf("\npc ==> 10: %d, 16 %X\n", reg[32], reg[32]);
+		printf("\npc ==> decimal: %d, hexa: %X\n", reg[32], reg[32]);
 		inst = ft_curr_inst(inst_mem, reg[32]);
 		ft_inst_exec(inst, reg, data_mem);
 		i++;
