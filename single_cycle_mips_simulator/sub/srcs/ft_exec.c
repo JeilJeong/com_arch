@@ -8,7 +8,8 @@ unsigned int ft_curr_inst(unsigned int *inst_mem, unsigned int pc)
 	unsigned int	index;
 
 	index = pc / 4;
-	printf("\ncurrent inst: %X\n", inst_mem[index]);
+	//printf("\ncurrent inst: %X\n", inst_mem[index]);
+	//printf("==>index = %u\n", index);
 	return (inst_mem[index]);
 }
 
@@ -50,30 +51,31 @@ void	*ft_read(char *argv, unsigned int *inst_mem)
 	fclose(fd);
 }
 
-void	ft_inst_exec(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
+int	ft_inst_exec(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 {
 	int	type;
 
 	type = ft_istype(inst);
 	if (type == 2)
 	{
-		puts("R-type\n");
-		ft_rtype(inst, reg, data_mem);
+	//	puts("R-type\n");
+		return (ft_rtype(inst, reg, data_mem));
 	}
 	else if (type == 1)
 	{
-		puts("I-type\n");
-		ft_itype(inst, reg, data_mem);
+	//	puts("I-type\n");
+		return (ft_itype(inst, reg, data_mem));
 	}
 	else if (type == 0)
 	{
-		puts("J-type\n");
-		ft_jtype(inst, reg, data_mem);
+	//	puts("J-type\n");
+		return (ft_jtype(inst, reg, data_mem));
 	}
 	else
 	{
-		puts("ft_nop\n");
+	//	puts("ft_nop\n");
 		ft_nop();
+		return (-1);
 	}
 }
 
@@ -88,9 +90,13 @@ void	ft_exec(int argc, char **argv, unsigned int *reg, unsigned int *inst_mem, u
 	while (i < n)
 	{
 		ft_read(argv[1], inst_mem);
-		printf("\npc ==> decimal: %d, hexa: %X\n", reg[32], reg[32]);
+	//	printf("\npc ==> decimal: %d, hexa: %X\n", reg[32], reg[32]);
 		inst = ft_curr_inst(inst_mem, reg[32]);
-		ft_inst_exec(inst, reg, data_mem);
+		if (ft_inst_exec(inst, reg, data_mem) < 0)
+		{
+			printf("i = %d\n", i);
+			return ;
+		}
 		i++;
 	}
 }

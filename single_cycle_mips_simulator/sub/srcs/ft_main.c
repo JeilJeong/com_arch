@@ -4,6 +4,7 @@
 #include "ft_mem.h"
 #include "ft_reg.h"
 #include "ft_exec.h"
+#include "ft_print_result.h"
 
 int	main(int argc, char **argv)
 {
@@ -16,6 +17,7 @@ int	main(int argc, char **argv)
 	reg = ft_reg();
 	ft_arg_check(argc, argv);
 	ft_exec(argc, argv, reg, inst_mem, data_mem);
+	ft_print_result(argv, reg, data_mem);
 	free(inst_mem);
 	free(data_mem);
 	free(reg);
