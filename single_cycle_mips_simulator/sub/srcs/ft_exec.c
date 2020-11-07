@@ -75,6 +75,7 @@ int	ft_inst_exec(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 	{
 	//	puts("ft_nop\n");
 		ft_nop();
+		ft_pc_normal(reg);
 		return (-1);
 	}
 }

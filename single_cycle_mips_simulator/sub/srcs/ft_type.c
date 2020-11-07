@@ -74,6 +74,7 @@ int	ft_rtype(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 			//printf("r-type stop;\n");
 			//printf("funct = %06X\n", funct);
 			ft_nop();
+			ft_pc_normal(reg);
 			return (-1);
 	}
 }
@@ -169,6 +170,7 @@ int	ft_itype(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 			return (0);
 		default:
 			ft_nop();
+			ft_pc_normal(reg);
 			return (-1);
 	}
 }
@@ -187,6 +189,7 @@ int	ft_jtype(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
 	else
 	{
 		ft_nop();
+		ft_pc_normal(reg);
 		return (-1);
 	}
 	return (0);
