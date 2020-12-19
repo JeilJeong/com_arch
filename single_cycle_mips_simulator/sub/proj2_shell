@@ -1,0 +1,33 @@
+#!/bin/bash
+
+make re;
+
+#make test file from self-coding
+./mips-sim proj2_1.bin 10 > test/test1.txt
+./mips-sim proj2_2.bin 40 reg > test/test2.txt
+./mips-sim proj2_2.bin 40 mem 0x10000000 5 > test/test3.txt
+./mips-sim proj2_3.bin 906 reg > test/test4.txt
+./mips-sim proj2_3.bin 15 mem 0x10000000 10 > test/test5.txt
+./mips-sim proj2_3.bin 905 mem 0x10000000 10 > test/test6.txt
+
+#make orig file from standard-coding
+../proj2/mips-sim proj2_1.bin 10 > test/orig1.txt
+../proj2/mips-sim proj2_2.bin 40 reg > test/orig2.txt
+../proj2/mips-sim proj2_2.bin 40 mem 0x10000000 5 > test/orig3.txt
+../proj2/mips-sim proj2_3.bin 906 reg > test/orig4.txt
+../proj2/mips-sim proj2_3.bin 15 mem 0x10000000 10 > test/orig5.txt
+../proj2/mips-sim proj2_3.bin 905 mem 0x10000000 10 > test/orig6.txt
+
+#diff check
+i=1;
+while (("${i}" < 6)); do
+	diff -c test/test"${i}".txt test/orig"${i}".txt
+	((i = "${i}" + 1))
+done
+
+#mem leak check
+echo ""
+echo "memory leak check =======>"
+valgrind ./mips-sim proj2_1.bin 10 reg
+
+exit 0

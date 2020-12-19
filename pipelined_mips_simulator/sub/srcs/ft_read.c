@@ -1,21 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "ft_type.h"
+#include "ft_read.h"
 
-unsigned int ft_curr_inst(unsigned int *inst_mem, unsigned int pc)
+extern unsigned int	*inst_mem;
+
+void	ft_read(char *argv)
 {
-	unsigned int	index;
-
-	index = pc / 4;
-	return (inst_mem[index]);
-}
-
-void	ft_read(char *argv, unsigned int *inst_mem)
-{
-	FILE		*fd;
+	FILE	*fd;
 	int		size;
 	int		count;
+    //little endian to big endian
 	unsigned int	first_mask = 0xFF000000;
 	unsigned int	second_mask = 0x00FF0000;
 	unsigned int	third_mask = 0x0000FF00;
@@ -47,41 +42,4 @@ void	ft_read(char *argv, unsigned int *inst_mem)
 		inst_mem[i] = tmp_first | tmp_second | tmp_third | tmp_fourth;
 	}
 	fclose(fd);
-}
-
-int	ft_inst_exec(unsigned int inst, unsigned int *reg, unsigned int *data_mem)
-{
-	int	type;
-
-	type = ft_istype(inst);
-	if (type == 2)
-		return (ft_rtype(inst, reg, data_mem));
-	else if (type == 1)
-		return (ft_itype(inst, reg, data_mem));
-	else if (type == 0)
-		return (ft_jtype(inst, reg, data_mem));
-	else
-	{
-		ft_nop();
-		ft_pc_normal(reg);
-		return (-1);
-	}
-}
-
-void	ft_exec(char **argv, unsigned int *reg, unsigned int *inst_mem, unsigned int *data_mem)
-{
-	unsigned int	inst;
-	int		n;
-	int		i;
-
-	n = atoi(argv[2]);
-	i = 0;
-	while (i < n)
-	{
-		ft_read(argv[1], inst_mem);
-		inst = ft_curr_inst(inst_mem, reg[32]);
-		if (ft_inst_exec(inst, reg, data_mem) < 0)
-			return ;
-		i++;
-	}
 }

@@ -40,7 +40,7 @@ void	ft_errno(int errno)
 
 void	ft_arg_check(int argc, char **argv)
 {
-	if (argc < 3)
+	if (argc < 4)
 		ft_errno(-1);
 	if (strlen(argv[1]) > 255)
 		ft_errno(-2);
@@ -49,9 +49,7 @@ void	ft_arg_check(int argc, char **argv)
 		if (!isdigit(argv[2][i]))
 			ft_errno(-3);
 	}
-	if (argc < 4)
-		return ;
-	else if (strcmp(argv[3], "mem") == 0)
+	if (strcmp(argv[3], "mem") == 0)
 	{
 		if (argc != 6)
 			ft_errno(-1);
@@ -70,6 +68,4 @@ void	ft_arg_check(int argc, char **argv)
 	}
 	else if (strcmp(argv[3], "reg") == 0)
 		return ;
-	//else
-	//	ft_errno(-4);
 }

@@ -1,9 +1,9 @@
 NAME = mips-sim
 CC = gcc
-CFLAGS =
+CFLAGS = -Wall -Wextra -Werror
 INCLUDES_DIR = ./includes
 SRCS_DIR = ./srcs
-SRCS = ft_main.c ft_check.c ft_mem.c ft_reg.c ft_exec.c ft_type.c ft_print_result.c
+SRCS = ft_main.c ft_check.c ft_mem.c ft_reg.c ft_read.c
 OBJS = $(addprefix $(SRCS_DIR)/, $(SRCS:.c=.o))
 
 all : $(NAME)
