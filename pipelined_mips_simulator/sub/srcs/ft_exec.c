@@ -1,18 +1,38 @@
 #include <stdlib.h>
 #include <pthread.h>
+#include "ft_ff.h"
 
 extern unsigned int		pc;
 extern unsigned int		*inst_mem;
-extern struct _IF_ID	IF_ID;
+extern IF_ID			*if_id;
+extern ID_EX			*id_ex;
+extern EX_MEM			*ex_mem;
+extern MEM_WB			*mem_wb;
 
-void	*ft_IF(void *data)
+void	*ft_if(void *data)
 {
 	int				index;
 	unsigned int	inst;
 
 	index = pc / 4;
 	inst = inst_mem[index];
-	IF_ID.inst = inst;
+	if_id->inst = inst;
+}
+
+void	*ft_id(void *data)
+{
+}
+
+void	*ft_ex(void *data)
+{
+}
+
+void	*ft_mem(void *data)
+{
+}
+
+void	*ft_wb(void *data)
+{
 }
 
 void	ft_exec(int cycle)
@@ -26,31 +46,31 @@ void	ft_exec(int cycle)
 	while (i < cycle)
 	{
 		//IF
-		if (pthread_create(&p_thread[0], NULL, ft_IF, (void *)NULL) < 0);
+		if (pthread_create(&p_thread[0], NULL, ft_if, (void *)NULL) < 0);
 		{
 			perror("thread create error : ");
 			exit(0);
 		}
 		//ID
-		if (pthread_create(&p_thread[1], NULL, ft_ID, (void *)NULL) < 0);
+		if (pthread_create(&p_thread[1], NULL, ft_id, (void *)NULL) < 0);
 		{
 			perror("thread create error : ");
 			exit(0);
 		}
 		//EX
-		if (pthread_create(&p_thread[2], NULL, ft_EX, (void *)NULL) < 0);
+		if (pthread_create(&p_thread[2], NULL, ft_ex, (void *)NULL) < 0);
 		{
 			perror("thread create error : ");
 			exit(0);
 		}
 		//MEM
-		if (pthread_create(&p_thread[3], NULL, ft_MEM, (void *)NULL) < 0);
+		if (pthread_create(&p_thread[3], NULL, ft_mem, (void *)NULL) < 0);
 		{
 			perror("thread create error : ");
 			exit(0);
 		}
 		//WB
-		if (pthread_create(&p_thread[4], NULL, ft_WB, (void *)NULL) < 0);
+		if (pthread_create(&p_thread[4], NULL, ft_wb, (void *)NULL) < 0);
 		{
 			perror("thread create error : ");
 			exit(0);
