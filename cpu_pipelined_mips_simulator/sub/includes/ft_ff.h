@@ -19,7 +19,7 @@ typedef struct _ID_EX{
 typedef struct _EX_MEM{
 	unsigned int	rt;
 	unsigned int	rd;
-	unsigned int	alu_result;
+	unsigned int	result;
 	//control
 	unsigned int	control[9];
 } EX_MEM;
@@ -27,7 +27,8 @@ typedef struct _EX_MEM{
 typedef struct _MEM_WB{
 	unsigned int	rt;
 	unsigned int	rd;
-	unsigned int	alu_result;
+	unsigned int	result;
+	unsigned int	mem_read;
 	//control
 	unsigned int	control[9];
 } MEM_WB;

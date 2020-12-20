@@ -113,17 +113,19 @@ unsigned int	ft_mem(void)
 {
 	if (ex_mem->control[ALU_OP] == 0)
 	{
+		//load
 		if (ex_mem->control[MEM_READ] == 1 && ex_mem->control[REG_WRITE] == 1)
-			return (data_mem[ex_mem->alu_result / 4]);
+			return (data_mem[ex_mem->result / 4]);
 		else if (ex_mem->control[MEM_WRITE] == 1)
 		{
-			data_mem[ex_mem->alu_result / 4] = reg[ex_mem->rt];
+			//store
+			data_mem[ex_mem->result / 4] = reg[ex_mem->rt];
 		}
 	}
 	return (0);
 }
 
-void	ft_wb(unsigned int data)
+void	ft_wb(void)
 {
 	if (mem_wb->control[MEM_TO_REG] == 0)
 	{
@@ -131,40 +133,83 @@ void	ft_wb(unsigned int data)
 		{
 			//r-type: ALU_OP = 2, dest = rd
 			if (mem_wb->control[REG_DST] == 1)
-				reg[mem_wb->rd] = data;
+				reg[mem_wb->rd] = mem_wb->result;
 			//i-type: ALU_OP = 3, dest = rt
 			else if(mem_wb->control[REG_DST] == 0)
-				reg[mem_wb->rt] = data;
+				reg[mem_wb->rt] = mem_wb->result;
 		}
 	}
 	//load: ALU_OP = 0, dest = rt
 	else if (mem_wb->control[MEM_TO_REG] == 1 && mem_wb->control[REG_WRITE] == 1)
 	{
-		reg[mem_wb->rt] = data;
+		reg[mem_wb->rt] = mem_wb->mem_read;
 	}
+}
+
+void	ft_ff_insert(unsigned int inst, unsigned int **reg_control, unsigned int result, unsigned int mem_read)
+{
+	//MEM_WB
+	mem_wb->rt = ex_mem->rt;
+	mem_wb->rd = ex_mem->rd;
+	mem_wb->result = ex_mem->result;
+	mem_wb->mem_read = mem_read;
+	for (int i = 0; i < 9; i++)
+		mem_wb->control[i] = ex_mem->control[i];
+
+	//EX_MEM
+	ex_mem->rt = id_ex->rt;
+	ex_mem->rd = id_ex->rd;
+	ex_mem->result = result;
+	for (int i = 0; i < 9; i++)
+		ex_mem->control[i] = id_ex->control[i];
+
+	//ID_EX: r-type
+	if (reg_control[0][0] == 1)
+	{
+		id_ex->rs = reg_control[0][1];
+		id_ex->rt = reg_control[0][2];
+		id_ex->rd = reg_control[0][3];
+		id_ex->funct = reg_control[0][4];
+	}
+	//ID_EX: i-type
+	else if (reg_control[0][0] == 2)
+	{
+		id_ex->opcode = reg_control[0][1];
+		id_ex->rs = reg_control[0][2];
+		id_ex->rt = reg_control[0][3];
+		id_ex->offset = reg_control[0][4];
+	}
+	for (int i = 0; i < 9; i++)
+		id_ex->control[i] = reg_control[1][i];
+
+	//IF_ID
+	if_id->inst = inst;
 }
 
 void	ft_exec(int cycle)
 {
 	unsigned int	inst;
 	unsigned int	**reg_control;
-	unsigned int	data;
+	unsigned int	result;
 	unsigned int	mem_read;
 	int				i;
 
 	inst = 0;
-	data = 0;
+	result = 0;
 	mem_read = 0;
 	reg_control = 0;
 	i = 0;
 	while (i < cycle)
 	{
-		ft_wb(data);
+		ft_wb();
 		mem_read = ft_mem();
-		data = ft_ex();
+		result = ft_ex();
 		reg_control = ft_id();
 		inst = ft_if();
+
+		ft_ff_insert(inst, reg_control, result, mem_read);
 		//flip flop storing will be excuted last;
 		//pc value will be decided when the branch or jmp is decoded;
+		pc += 4;
 	}
 }

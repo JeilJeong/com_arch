@@ -22,7 +22,7 @@ unsigned int	ft_if(void);
 unsigned int	**ft_id(void);
 unsigned int	ft_ex(void);
 unsigned int	ft_mem(void);
-void	ft_wb(unsigned int data);
+void	ft_wb(void);
 void	ft_exec(int cycle);
 
 #endif
