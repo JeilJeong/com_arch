@@ -8,6 +8,7 @@
 #include "ft_type.h"
 #include "ft_rtype.h"
 #include "ft_itype.h"
+#include "ft_unknown.h"
 
 extern unsigned int		*inst_mem;
 extern unsigned int		*data_mem;
