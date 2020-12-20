@@ -9,7 +9,7 @@ void	ft_print_reg(void)
 	{
 		printf("$%d: 0x%08x\n", i, reg[i]);
 	}
-	printf("PC: 0x%08x\n", reg[32]);
+	printf("PC: 0x%08x\n", pc - 4);
 }
 
 void	ft_print_mem(char **argv)

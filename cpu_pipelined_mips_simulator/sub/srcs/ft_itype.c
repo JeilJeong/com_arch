@@ -3,6 +3,11 @@
 #include "ft_type.h"
 #include "ft_itype.h"
 
+void	ft_pc_branch(int imm)
+{
+	pc = (pc + 4) + (imm << 2);
+}
+
 unsigned int	*ft_itype_ff(unsigned int flag, unsigned int opcode, unsigned int rs, unsigned int rt, unsigned int offset)
 {
 	unsigned int	*tmp_reg;

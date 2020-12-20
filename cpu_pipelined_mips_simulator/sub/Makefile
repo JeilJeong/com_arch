@@ -12,6 +12,7 @@ SRCS = ft_main.c \
 	ft_type.c \
 	ft_rtype.c \
 	ft_itype.c \
+	ft_jtype.c \
 	ft_exec.c \
 	ft_print_result.c \
 	ft_unknown.c
@@ -20,7 +21,7 @@ OBJS = $(addprefix $(SRCS_DIR)/, $(SRCS:.c=.o))
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ -lpthread
+	$(CC) $(CFLAGS) -o $@ $^
 
 .c.o : 
 	$(CC) $(CFLAGS) -I $(INCLUDES_DIR) -c $< -o $(<:.c=.o)

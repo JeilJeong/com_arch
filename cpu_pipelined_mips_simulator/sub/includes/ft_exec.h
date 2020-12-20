@@ -8,11 +8,13 @@
 #include "ft_type.h"
 #include "ft_rtype.h"
 #include "ft_itype.h"
+#include "ft_jtype.h"
 #include "ft_unknown.h"
 
 extern unsigned int		*inst_mem;
 extern unsigned int		*data_mem;
 extern unsigned int		pc;
+extern unsigned int		branch;
 extern unsigned int		*reg;
 extern IF_ID			*if_id;
 extern ID_EX			*id_ex;
@@ -21,7 +23,7 @@ extern MEM_WB			*mem_wb;
 
 unsigned int	ft_if(void);
 unsigned int	**ft_id(void);
-unsigned int	ft_ex(void);
+int	ft_ex(void);
 unsigned int	ft_mem(void);
 void	ft_wb(void);
 void	ft_exec(int cycle);
