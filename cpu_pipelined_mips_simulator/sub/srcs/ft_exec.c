@@ -1,19 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "ft_ff.h"
-#include "ft_type.h"
-#include "ft_rtype.h"
 #include "ft_exec.h"
-
-extern unsigned int		*inst_mem;
-extern unsigned int		*data_mem;
-extern unsigned int		pc = 0;
-extern unsigned int		*reg;
-extern IF_ID			*if_id;
-extern ID_EX			*id_ex;
-extern EX_MEM			*ex_mem;
-extern MEM_WB			*mem_wb;
 
 unsigned int	ft_if(void)
 {
@@ -21,7 +6,8 @@ unsigned int	ft_if(void)
 	unsigned int		inst;
 
 	inst = inst_mem[pc / 4];
-	//calculate next pc value-> in while loop; 
+	//calculate next pc value-> in while loop;
+	return (inst);
 }
 
 unsigned int	**ft_id(void)
@@ -35,10 +21,10 @@ unsigned int	**ft_id(void)
 		return (ft_rtype(inst));
 	else if (type == 1)
 		return (ft_itype(inst));
-	else if (type == 0)
-		ft_jtype(inst);
-	else
-		ft_unknown(inst);
+	// else if (type == 0)
+	// 	ft_jtype(inst);
+	// else
+	// 	ft_unknown(inst);
 
 		// case 0x10000000: //beq
 		// 	if (reg[id_ex->rs] == reg[rt])
@@ -52,6 +38,7 @@ unsigned int	**ft_id(void)
 		// 	else
 		// 		ft_pc_normal(reg);
 		// 	return (0);
+	return (0);
 }
 
 unsigned int	ft_ex(void)
@@ -119,6 +106,7 @@ unsigned int	ft_ex(void)
 			return (result);
 		}
 	}
+	return (result);
 }
 
 unsigned int	ft_mem(void)
@@ -126,7 +114,7 @@ unsigned int	ft_mem(void)
 	if (ex_mem->control[ALU_OP] == 0)
 	{
 		if (ex_mem->control[MEM_READ] == 1 && ex_mem->control[REG_WRITE] == 1)
-			return (data_mem[ex_mem->alu_reslut / 4]);
+			return (data_mem[ex_mem->alu_result / 4]);
 		else if (ex_mem->control[MEM_WRITE] == 1)
 		{
 			data_mem[ex_mem->alu_result / 4] = reg[ex_mem->rt];
@@ -139,13 +127,13 @@ void	ft_wb(unsigned int data)
 {
 	if (mem_wb->control[MEM_TO_REG] == 0)
 	{
-		if (mem_wb->control[REG_WRITE] = 1)
+		if (mem_wb->control[REG_WRITE] == 1)
 		{
 			//r-type: ALU_OP = 2, dest = rd
-			if (mem_wb->control[REG_DST] = 1)
+			if (mem_wb->control[REG_DST] == 1)
 				reg[mem_wb->rd] = data;
 			//i-type: ALU_OP = 3, dest = rt
-			else if(mem_wb->control[REG_DST] = 0)
+			else if(mem_wb->control[REG_DST] == 0)
 				reg[mem_wb->rt] = data;
 		}
 	}

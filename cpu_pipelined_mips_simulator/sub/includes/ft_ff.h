@@ -17,6 +17,7 @@ typedef struct _ID_EX{
 } ID_EX;
 
 typedef struct _EX_MEM{
+	unsigned int	rt;
 	unsigned int	rd;
 	unsigned int	alu_result;
 	//control
@@ -24,6 +25,7 @@ typedef struct _EX_MEM{
 } EX_MEM;
 
 typedef struct _MEM_WB{
+	unsigned int	rt;
 	unsigned int	rd;
 	unsigned int	alu_result;
 	//control

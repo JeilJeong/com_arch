@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "string.h"
 #include "ft_ff.h"
 
 IF_ID	*ft_if_id(void)
@@ -11,6 +12,7 @@ IF_ID	*ft_if_id(void)
 		perror("IF_ID malloc failed\n");
 		exit(1);
 	}
+	memset(ptr, 0x00, sizeof(IF_ID));
 	return (ptr);
 }
 
@@ -23,6 +25,7 @@ ID_EX	*ft_id_ex(void)
 		perror("ID_EX malloc failed\n");
 		exit(1);
 	}
+	memset(ptr, 0x00, sizeof(ID_EX));
 	return (ptr);
 }
 
@@ -35,6 +38,7 @@ EX_MEM	*ft_ex_mem(void)
 		perror("EX_MEM malloc failed\n");
 		exit(1);
 	}
+	memset(ptr, 0x00, sizeof(EX_MEM));
 	return (ptr);
 }
 
@@ -47,5 +51,6 @@ MEM_WB	*ft_mem_wb(void)
 		perror("MEM_WB malloc failed\n");
 		exit(1);
 	}
+	memset(ptr, 0x00, sizeof(MEM_WB));
 	return (ptr);
 }

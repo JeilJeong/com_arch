@@ -5,6 +5,7 @@
 #include "ft_reg.h"
 #include "ft_read.h"
 #include "ft_ff.h"
+#include "ft_exec.h"
 
 //1) declare hardware;
 unsigned int	*inst_mem;
@@ -17,7 +18,7 @@ ID_EX			*id_ex;
 EX_MEM			*ex_mem;
 MEM_WB			*mem_wb;
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	ft_arg_check(argc, argv);
 	inst_mem = ft_inst_mem();
@@ -42,5 +43,6 @@ int		main(int argc, char **argv)
 	// printf("%u\n", id_ex->rs);
 	// printf("%u\n", ex_mem->rs);
 	// printf("%u\n", mem_wb->rs);
-	// ft_exec(atoi(argv[2]));
+	printf("[atoi] %d\n", atoi(argv[2]));
+	ft_exec(atoi(argv[2]));
 }
